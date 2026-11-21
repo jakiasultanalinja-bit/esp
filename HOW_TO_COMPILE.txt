@@ -1,0 +1,125 @@
+==============================================
+  FF ESP PANEL — HOW TO COMPILE TO APK
+==============================================
+
+WHAT IS INSIDE THIS ZIP:
+  FFPanel/           ← Android app source (compile this to APK)
+  repack.py          ← Script to inject Frida into FF APK
+  HOW_TO_COMPILE.txt ← This file
+
+==============================================
+METHOD 1 — GITHUB ACTIONS (easiest, zero install)
+==============================================
+
+1. Go to github.com → sign up free
+2. Create new repository → name it "FFPanel" → Public
+3. Click "uploading an existing file"
+4. Upload everything inside this zip (keep folder structure)
+5. Click "Commit changes"
+6. Go to "Actions" tab on your repo
+7. Wait 2-3 minutes → green checkmark = build done
+8. Click the run → "Artifacts" section → download "FFPanel-APK"
+9. Extract zip → you get: app-debug.apk
+
+DONE. Transfer APK to phone and install.
+
+==============================================
+METHOD 2 — REPLIT (online, free)
+==============================================
+
+1. Go to replit.com → sign up free
+2. New Repl → choose "Bash"
+3. Click the file icon (top left) → upload all files from this zip
+4. In the Shell tab, run these commands one by one:
+
+   apt-get install -y default-jdk gradle
+   cd FFPanel
+   gradle wrapper --gradle-version 8.1
+   chmod +x gradlew
+   ./gradlew assembleDebug
+
+5. After build, find APK at:
+   FFPanel/app/build/outputs/apk/debug/app-debug.apk
+6. Right-click it in Replit file panel → Download
+
+DONE. Transfer APK to phone and install.
+
+==============================================
+INSTALL ON PHONE
+==============================================
+
+Option A — USB cable:
+  1. Connect phone to PC with USB
+  2. Select "File Transfer" mode on phone
+  3. Copy app-debug.apk to phone Downloads folder
+  4. Open file manager on phone → tap APK → Install
+  5. If blocked: Settings → Apps → Install Unknown Apps → Allow
+
+Option B — Send to yourself:
+  Upload APK to Telegram Saved Messages or Google Drive
+  Open on phone → download → install
+
+Option C — adb (if installed on PC):
+  adb install app-debug.apk
+
+==============================================
+INSTALL PATCHED FREE FIRE (for no-root ESP)
+==============================================
+
+You also need to repack FF APK with Frida gadget:
+
+1. Get ff.apk on your PC (pull from phone or APKPure)
+2. Download these 3 files into same folder as repack.py:
+   - apktool.jar   → https://apktool.org
+   - uber-apk-signer.jar → github.com/patrickfav/uber-apk-signer/releases
+   - libfrida-gadget.so  → github.com/frida/frida/releases
+     (pick: frida-gadget-xx.x.x-android-arm64.so.xz → extract → rename)
+3. Run:  python repack.py
+4. Install ff_patched.apk on phone
+   (uninstall original FF first if needed)
+
+==============================================
+HOW TO USE
+==============================================
+
+1. Install ff_patched.apk on phone
+2. Install FFPanel app-debug.apk on phone
+3. Open Free Fire → join a match
+4. Open FF Panel app → grant overlay permission → tap START
+5. App hides, floating panel appears on top of FF
+6. Drag ⠿ handle to move panel
+7. Toggle switch: ON = show ESP, OFF = hide ESP
+8. Tap ✕ to close panel
+
+==============================================
+PANEL DISPLAY EXPLAINED
+==============================================
+
+⠿ FF ESP    [toggle ON/OFF]  [✕ close]
+Pos: 1240/5/870 | Cnt: 6
+
+  # Name         Dist  Dir  Hgt
+  ──────────────────────────────
+  1 PLAYER1      48m   NE  -2    ← RED = enemy
+  2 PLAYER2      91m   N   +8
+  3 TEAM1       120m   SW   0    ← GREEN = teammate
+
+   ·E·····E··E·····
+   ········@·······   ← minimap (@=you E=enemy T=team)
+   ·····T··········
+
+==============================================
+NOTE ON OFFSETS
+==============================================
+
+The offsets in FridaBridge.java are placeholder values.
+They change with each FF update.
+
+To update offsets after a patch:
+1. Install GameGuardian (also works without root using VirtualXposed)
+2. Scan your HP: 100.0 (float) → take damage → scan changed value
+3. Find pointer chain to EntityList
+4. Update OFF_LIST, OFF_LOCAL etc. in FridaBridge.java
+5. Rebuild APK
+
+==============================================

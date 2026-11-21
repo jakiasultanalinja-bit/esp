@@ -1,24 +1,35 @@
 plugins {
     id 'com.android.application'
 }
+
 android {
     namespace 'com.ffpanel'
-    compileSdk 34
+    compileSdkVersion 33
+
     defaultConfig {
         applicationId "com.ffpanel"
-        minSdk 29
-        targetSdk 34
+        minSdkVersion 29
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
-        release { minifyEnabled false }
+        debug {
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
+        }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
 }
